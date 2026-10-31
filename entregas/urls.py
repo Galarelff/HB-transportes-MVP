@@ -1,7 +1,11 @@
-
 from django.urls import path
-from .views import lista_entregas
+from . import views
 
 urlpatterns = [
-    path("", lista_entregas, name="lista_entregas"),
+    path("", views.lista_entregas, name="lista_entregas"),
+    path(
+        "entrega/<str:numero>/atualizar-status/",
+        views.atualizar_status,
+        name="atualizar_status",
+    ),
 ]
