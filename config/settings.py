@@ -9,9 +9,18 @@ SECRET_KEY = os.environ.get(
     "chave-apenas-para-desenvolvimento"
 )
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+CODESPACE_NAME = os.environ.get("CODESPACE_NAME", "")
+
+if CODESPACE_NAME:
+    ALLOWED_HOSTS.append(f"{CODESPACE_NAME}-8000.app.github.dev")
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://lonely-spooky-orb-jjvqj6r4x4vwhj5qi-8000.app.github.dev",
+    "https://localhost:8000",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",

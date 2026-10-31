@@ -1,8 +1,32 @@
 
 from django.http import HttpResponse
+from django.utils.html import escape
+
+from .models import Entrega
 
 
 def lista_entregas(request):
+    entregas = Entrega.objects.all()
+
+    linhas = ""
+
+    for entrega in entregas:
+        linhas += f"""
+        <tr>
+            <td>{escape(entrega.numero)}</td>
+            <td>{escape(entrega.cliente)}</td>
+            <td>{escape(entrega.motorista)}</td>
+            <td>{escape(entrega.status)}</td>
+        </tr>
+        """
+
+    if not entregas.exists():
+        linhas = """
+        <tr>
+            <td colspan="4">Nenhuma entrega cadastrada.</td>
+        </tr>
+        """
+
     html = """
     <!DOCTYPE html>
     <html lang="pt-br">
@@ -44,27 +68,13 @@ def lista_entregas(request):
                 <th>Motorista</th>
                 <th>Status</th>
             </tr>
-            <tr>
-                <td>1001</td>
-                <td>Cliente Exemplo A</td>
-                <td>Motorista A</td>
-                <td>Pendente</td>
-            </tr>
-            <tr>
-                <td>1002</td>
-                <td>Cliente Exemplo B</td>
-                <td>Motorista B</td>
-                <td>Em andamento</td>
-            </tr>
-            <tr>
-                <td>1003</td>
-                <td>Cliente Exemplo C</td>
-                <td>Motorista C</td>
-                <td>Entregue</td>
-            </tr>
+            CONTEUDO_DAS_ENTREGAS
         </table>
-        <p>Dados demonstrativos para validação da interface.</p>
+        <p>Informações consultadas no banco de dados.</p>
     </body>
     </html>
     """
+
+    html = html.replace("CONTEUDO_DAS_ENTREGAS", linhas)
+
     return HttpResponse(html)
